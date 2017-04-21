@@ -18,6 +18,12 @@ import fontTools
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables.S_V_G_ import table_S_V_G_
 from fontTools.ttLib.tables._n_a_m_e import NameRecord, table__n_a_m_e
+from fontTools.ttLib.tables._s_b_i_x import table__s_b_i_x # Apple
+# from fontTools.ttLib.tables.sbixGlyph import Glyph
+# from fontTools.ttLib.tables.sbixStrike import Strike
+from fontTools.ttLib.tables.C_B_D_T_ import table_C_B_D_T_ # Google
+from fontTools.ttLib.tables.C_B_L_C_ import table_C_B_L_C_ # Google
+
 
 from . import fforge
 from . import util
@@ -48,11 +54,14 @@ class Builder(object):
             logging.getLogger().setLevel(logging.DEBUG)
 
     def run(self):
-        logger.info("Creating a new font")
-        ff_font = fforge.create_font(self.conf)
+        logger.info("Creating three new fonts")
+        ff_font = fforge.create_font(self.conf) # SVG
+        ff_apple = fforge.create_font(self.conf) # sbix
+        ff_google = fforge.create_font(self.conf) # CBDT+CBLC
 
         # Find and add regular glyphs
         svg_filepaths = util.get_svg_filepaths(self.conf['glyph_svg_dir'])
+        # png_filepaths = util.get_png_filepaths(self.conf['glyph_png_dir'])
         # TODO: Validate regular SVGs
         logger.info("Adding glyphs and ligatures")
         fforge.add_glyphs(ff_font, svg_filepaths, self.conf)
